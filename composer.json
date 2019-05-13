@@ -21,7 +21,7 @@
     },
     "scripts": {
         "phpunit": "phpunit",
-        "phpstan": "phpstan analyse --level max examples/ tests/ src/",
-        "phpcs": "phpcs --standard=PSR2 examples/ tests/ src/"
+        "phpstan": "phpstan analyse --level max examples/ src/",
+        "phpcs": "phpcs --standard=PSR2 examples/ src/"
     }
 }
