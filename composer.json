@@ -1,0 +1,27 @@
+{
+    "name": "flow-control/react-inotify",
+    "description": "Event-driven inotify streams for non-blocking I/O in ReactPHP",
+    "keywords": ["event-driven", "inotify", "non-blocking", "ReactPHP"],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1",
+        "ext-inotify": "*",
+        "react/event-loop": "^1",
+        "evenement/evenement": "^3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flowcontrol\\React\\Inotify\\": "src"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.1",
+        "phpstan/phpstan": "^0.11.6",
+        "squizlabs/php_codesniffer": "^3.4"
+    },
+    "scripts": {
+        "phpunit": "phpunit",
+        "phpstan": "phpstan analyse --level max examples/ tests/ src/",
+        "phpcs": "phpcs --standard=PSR2 examples/ tests/ src/"
+    }
+}
