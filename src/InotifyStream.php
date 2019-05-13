@@ -104,7 +104,9 @@ final class InotifyStream extends EventEmitter
         }
     }
 
-    /** @internal */
+    /**
+     * @internal
+     */
     public function handleData()
     {
         $error = null;
