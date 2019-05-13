@@ -20,6 +20,7 @@ before_install:
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
 
 before_script:
+    - pecl install inotify
     - composer install --no-interaction
 
 script:
