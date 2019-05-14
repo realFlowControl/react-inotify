@@ -22,6 +22,10 @@
     "scripts": {
         "phpunit": "phpunit",
         "phpstan": "phpstan analyse --level max examples/ src/",
-        "phpcs": "phpcs --standard=PSR2 examples/ src/"
+        "phpcs": "phpcs --standard=PSR2 examples/ src/",
+        "test": [
+            "@phpcs",
+            "@phpstan"
+        ]
     }
 }
