@@ -25,3 +25,4 @@ before_script:
 script:
     - composer phpcs
     - composer phpstan
+    - composer phpunit 

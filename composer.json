@@ -14,6 +14,11 @@
             "Flowcontrol\\React\\Inotify\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Flowcontrol\\React\\Inotify\\Tests\\": "tests"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^8.1",
         "phpstan/phpstan": "^0.11.6",
@@ -21,11 +26,12 @@
     },
     "scripts": {
         "phpunit": "phpunit",
-        "phpstan": "phpstan analyse --level max examples/ src/",
-        "phpcs": "phpcs --standard=PSR2 examples/ src/",
+        "phpstan": "phpstan analyse --level max examples/ src/ tests/",
+        "phpcs": "phpcs --standard=PSR2 examples/ src/ tests/",
         "test": [
             "@phpcs",
-            "@phpstan"
+            "@phpstan",
+            "@phpunit"
         ]
     }
 }
