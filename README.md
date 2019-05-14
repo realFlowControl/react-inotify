@@ -2,7 +2,7 @@
 
 Simple, async inotify event handler build with ReactPHP
 
-This library is heavily inspired by reactphp/stream.
+This library is heavily inspired by [reactphp/stream](https://github.com/reactphp/stream).
 
 ## Dependencies
 
