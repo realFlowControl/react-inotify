@@ -12,7 +12,7 @@ $fd = inotify_init();
 $watch_descriptor = inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
 
 $watcher = new InotifyStream($fd, $loop);
-$watcher->on('data', function (array $data) {
+$watcher->on('event', function (array $data) {
     var_dump($data);
 });
 

@@ -137,7 +137,7 @@ final class InotifyStream extends EventEmitter
         }
 
         if ($events !== false) {
-            $this->emit('data', $events);
+            $this->emit('event', $events);
         }
     }
 
