@@ -4,13 +4,21 @@ Simple, async inotify event handler build with ReactPHP
 
 This library is heavily inspired by reactphp/stream.
 
-## Install
+## Dependencies
+
+This library depends on the [PHP Inotify extension](https://pecl.php.net/package/inotify), available via PECL
+
+```bash
+$ pecl install inotify
+```
+
+## Usage
+
+### Install
 
 ```bash
 $ composer require flow-control/react-inotify
 ```
-
-## Usage
 
 ### Low level interface
 
