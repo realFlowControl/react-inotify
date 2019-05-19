@@ -137,7 +137,7 @@ final class InotifyStream extends EventEmitter
             return;
         }
 
-        if ($events !== false) {
+        if (count($events)) {
             $this->emit('event', $events);
         }
     }
