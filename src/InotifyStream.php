@@ -130,9 +130,12 @@ final class InotifyStream extends EventEmitter
         \restore_error_handler();
 
         if ($error !== null) {
-            $this->emit('error', [
-                new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)
-            ]);
+            $this->emit(
+                'error',
+                [
+                    new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)
+                ]
+            );
             $this->close();
             return;
         }
