@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -6,19 +7,22 @@ declare(strict_types=1);
  * open another terminal and: touch foobar
  */
 
-use React\EventLoop\Factory;
 use Flowcontrol\React\Inotify\InotifyStream;
+use React\EventLoop\Factory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $loop = Factory::create();
 
-$fd = inotify_init();
-$watch_descriptor = inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
+$inotify = inotify_init();
+inotify_add_watch($inotify, __DIR__, IN_CLOSE_WRITE);
 
-$watcher = new InotifyStream($fd, $loop);
-$watcher->on('event', function (array $data) {
+$watcher = new InotifyStream($inotify, $loop);
+$watcher->on('event', static function (array $data): void {
     var_dump($data);
 });
+
+touch(__DIR__.'/testfile');
+unlink(__DIR__.'/testfile');
 
 $loop->run();

@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Flowcontrol\React\Inotify;
 
 use Evenement\EventEmitter;
-use React\EventLoop\LoopInterface;
 use InvalidArgumentException;
+use React\EventLoop\LoopInterface;
 
 final class InotifyStream extends EventEmitter
 {
@@ -31,22 +32,30 @@ final class InotifyStream extends EventEmitter
 
     public function __construct($stream, LoopInterface $loop)
     {
-        if (!\is_resource($stream) || \get_resource_type($stream) !== "stream") {
-            throw new InvalidArgumentException('First parameter must be a valid stream resource');
+        if (! \is_resource($stream) ||
+            \get_resource_type($stream) !== "stream") {
+            throw new InvalidArgumentException(
+                'First parameter must be a valid stream resource'
+            );
         }
 
-        // ensure resource is opened for reading (fopen mode must contain "r" or "+")
+        // ensure resource is opened for reading (mode must contain "r" or "+")
         $meta = \stream_get_meta_data($stream);
         if (isset($meta['mode']) &&
             $meta['mode'] !== '' &&
             \strpos($meta['mode'], 'r') === \strpos($meta['mode'], '+')) {
-            throw new InvalidArgumentException('Given stream resource is not opened in read mode');
+            throw new InvalidArgumentException(
+                'Given stream resource is not opened in read mode'
+            );
         }
 
-        // this class relies on non-blocking I/O in order to not interrupt the event loop
-        // e.g. pipes on Windows do not support this: https://bugs.php.net/bug.php?id=47918
+        // this class relies on non-blocking I/O in order to not interrupt
+        // the event loop e.g. pipes on Windows do not support this:
+        // https://bugs.php.net/bug.php?id=47918
         if (\stream_set_blocking($stream, false) !== true) {
-            throw new \RuntimeException('Unable to set stream resource to non-blocking mode');
+            throw new \RuntimeException(
+                'Unable to set stream resource to non-blocking mode'
+            );
         }
 
         // Use unbuffered read operations on the underlying stream resource.
@@ -56,8 +65,10 @@ final class InotifyStream extends EventEmitter
         // This does not affect the default event loop implementation (level
         // triggered), so we can ignore platforms not supporting this (HHVM).
         // Pipe streams (such as STDIN) do not seem to require this and legacy
-        // PHP versions cause SEGFAULTs on unbuffered pipe streams, so skip this.
-        if (\function_exists('stream_set_read_buffer') && !$this->isLegacyPipe($stream)) {
+        // PHP versions cause SEGFAULTs on unbuffered pipe streams, so skip
+        // this.
+        if (\function_exists('stream_set_read_buffer') &&
+            ! $this->isLegacyPipe($stream)) {
             \stream_set_read_buffer($stream, 0);
         }
 
@@ -67,12 +78,12 @@ final class InotifyStream extends EventEmitter
         $this->resume();
     }
 
-    public function isReadable()
+    public function isReadable(): bool
     {
-        return !$this->closed;
+        return ! $this->closed;
     }
 
-    public function pause()
+    public function pause(): void
     {
         if ($this->listening) {
             $this->loop->removeReadStream($this->stream);
@@ -80,15 +91,16 @@ final class InotifyStream extends EventEmitter
         }
     }
 
-    public function resume()
+    public function resume(): void
     {
-        if (!$this->listening && !$this->closed) {
-            $this->loop->addReadStream($this->stream, array($this, 'handleData'));
+        if (! $this->listening &&
+            ! $this->closed) {
+            $this->loop->addReadStream($this->stream, [$this, 'handleData']);
             $this->listening = true;
         }
     }
 
-    public function close()
+    public function close(): void
     {
         if ($this->closed) {
             return;
@@ -108,10 +120,15 @@ final class InotifyStream extends EventEmitter
     /**
      * @internal
      */
-    public function handleData()
+    public function handleData(): void
     {
         $error = null;
-        \set_error_handler(function ($errno, $errstr, $errfile, $errline) use (&$error) {
+        \set_error_handler(static function (
+            int $errno,
+            string $errstr,
+            string $errfile,
+            int $errline
+        ) use (&$error): void {
             $error = new \ErrorException(
                 $errstr,
                 0,
@@ -133,7 +150,11 @@ final class InotifyStream extends EventEmitter
             $this->emit(
                 'error',
                 [
-                    new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)
+                    new \RuntimeException(
+                        'Unable to read from stream: ' . $error->getMessage(),
+                        0,
+                        $error
+                    ),
                 ]
             );
             $this->close();
@@ -152,16 +173,22 @@ final class InotifyStream extends EventEmitter
      * and PHP 5.5.12+ and newer.
      *
      * @param resource $resource
+     *
      * @return bool
+     *
      * @link https://github.com/reactphp/child-process/issues/40
      *
      * @codeCoverageIgnore
      */
     private function isLegacyPipe($resource)
     {
-        if (\PHP_VERSION_ID < 50428 || (\PHP_VERSION_ID >= 50500 && \PHP_VERSION_ID < 50512)) {
+        if (\PHP_VERSION_ID < 50428 || (
+                \PHP_VERSION_ID >= 50500 &&
+                \PHP_VERSION_ID < 50512)
+        ) {
             $meta = \stream_get_meta_data($resource);
-            if (isset($meta['stream_type']) && $meta['stream_type'] === 'STDIO') {
+            if (isset($meta['stream_type']) &&
+                $meta['stream_type'] === 'STDIO') {
                 return true;
             }
         }
