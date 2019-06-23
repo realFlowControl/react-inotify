@@ -183,8 +183,9 @@ final class InotifyStream extends EventEmitter
     private function isLegacyPipe($resource)
     {
         if (\PHP_VERSION_ID < 50428 || (
-                \PHP_VERSION_ID >= 50500 &&
-                \PHP_VERSION_ID < 50512)
+            \PHP_VERSION_ID >= 50500 &&
+                \PHP_VERSION_ID < 50512
+        )
         ) {
             $meta = \stream_get_meta_data($resource);
             if (isset($meta['stream_type']) &&
