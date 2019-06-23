@@ -19,7 +19,7 @@ inotify_add_watch($inotify, __DIR__, IN_CLOSE_WRITE);
 
 $watcher = new InotifyStream($inotify, $loop);
 $watcher->on('event', static function (array $data): void {
-    var_dump($data);
+    print_r($data);
 });
 
 touch(__DIR__.'/testfile');

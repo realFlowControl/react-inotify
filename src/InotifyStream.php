@@ -32,7 +32,7 @@ final class InotifyStream extends EventEmitter
 
     public function __construct($stream, LoopInterface $loop)
     {
-        if (! \is_resource($stream) ||
+        if (!\is_resource($stream) ||
             \get_resource_type($stream) !== "stream") {
             throw new InvalidArgumentException(
                 'First parameter must be a valid stream resource'
@@ -93,8 +93,8 @@ final class InotifyStream extends EventEmitter
 
     public function resume(): void
     {
-        if (! $this->listening &&
-            ! $this->closed) {
+        if (!$this->listening &&
+            !$this->closed) {
             $this->loop->addReadStream($this->stream, [$this, 'handleData']);
             $this->listening = true;
         }
@@ -122,13 +122,14 @@ final class InotifyStream extends EventEmitter
      */
     public function handleData(): void
     {
+        /** @var \ErrorException|null */
         $error = null;
         \set_error_handler(static function (
             int $errno,
             string $errstr,
             string $errfile,
             int $errline
-        ) use (&$error): void {
+        ) use (&$error): bool {
             $error = new \ErrorException(
                 $errstr,
                 0,
@@ -136,6 +137,7 @@ final class InotifyStream extends EventEmitter
                 $errfile,
                 $errline
             );
+            return true;
         });
 
         // fetch all events, as long as there are events in the queue

@@ -23,7 +23,7 @@ before_script:
     - composer install --no-interaction
 
 script:
-    - composer phpcs
-    - composer phpstan
-    - composer phpunit 
     - php vendor/bin/php-cs-fixer fix --config .php_cs.dist --dry-run
+    - composer phpstan
+    - composer psalm
+    - composer phpunit 

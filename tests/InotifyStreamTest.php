@@ -11,10 +11,10 @@ class InotifyStreamTest extends TestCase
     /**
      * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
      */
-    public function testInitNoStream()
+    public function testInitNoStream(): void
     {
         /** @var \React\EventLoop\LoopInterface */
-        $loop = $this->getMockBuilder('\React\EventLoop\LoopInterface')->getMock();
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $this->expectException(\InvalidArgumentException::class);
         new InotifyStream(null, $loop);
     }
@@ -22,10 +22,10 @@ class InotifyStreamTest extends TestCase
     /**
      * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
      */
-    public function testInitStreamNotInReadMode()
+    public function testInitStreamNotInReadMode(): void
     {
         /** @var \React\EventLoop\LoopInterface */
-        $loop = $this->getMockBuilder('\React\EventLoop\LoopInterface')->getMock();
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $this->expectException(\InvalidArgumentException::class);
         $fd = fopen(__FILE__, 'a');
         new InotifyStream($fd, $loop);
@@ -36,10 +36,10 @@ class InotifyStreamTest extends TestCase
      * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
      * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
      */
-    public function testValidStreamWithoutEvent()
+    public function testValidStreamWithoutEvent(): void
     {
         /** @var \React\EventLoop\LoopInterface */
-        $loop = $this->getMockBuilder('\React\EventLoop\LoopInterface')->getMock();
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $fd = inotify_init();
         inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
         $watcher = new InotifyStream($fd, $loop);
@@ -53,10 +53,10 @@ class InotifyStreamTest extends TestCase
      * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
      * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
      */
-    public function testValidStreamWithEvent()
+    public function testValidStreamWithEvent(): void
     {
         /** @var \React\EventLoop\LoopInterface */
-        $loop = $this->getMockBuilder('\React\EventLoop\LoopInterface')->getMock();
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $fd = inotify_init();
         inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
         $watcher = new InotifyStream($fd, $loop);
@@ -75,10 +75,10 @@ class InotifyStreamTest extends TestCase
      * @covers \Flowcontrol\React\Inotify\InotifyStream::close
      * @covers \Flowcontrol\React\Inotify\InotifyStream::isReadable
      */
-    public function testValidStreamWithoutEventAndClose()
+    public function testValidStreamWithoutEventAndClose(): void
     {
         /** @var \React\EventLoop\LoopInterface */
-        $loop = $this->getMockBuilder('\React\EventLoop\LoopInterface')->getMock();
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $fd = inotify_init();
         inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
         $watcher = new InotifyStream($fd, $loop);
@@ -102,10 +102,10 @@ class InotifyStreamTest extends TestCase
      * @covers \Flowcontrol\React\Inotify\InotifyStream::close
      * @covers \Flowcontrol\React\Inotify\InotifyStream::isReadable
      */
-    public function testCloseStreamWhileHandling()
+    public function testCloseStreamWhileHandling(): void
     {
         /** @var \React\EventLoop\LoopInterface */
-        $loop = $this->getMockBuilder('\React\EventLoop\LoopInterface')->getMock();
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $fd = inotify_init();
         inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
         $watcher = new InotifyStream($fd, $loop);
