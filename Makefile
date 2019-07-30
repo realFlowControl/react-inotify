@@ -1,4 +1,6 @@
-.PHONY: test
+.PHONY: test all
+
+all: vendor tags
 
 vendor: composer.lock
 	composer install -o
@@ -8,3 +10,6 @@ composer.lock: composer.json
 
 test:
 	composer test
+
+tags: vendor src tests examples
+	ctags -R --languages=PHP src/ tests/ examples/ vendor/
