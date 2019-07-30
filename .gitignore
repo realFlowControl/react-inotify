@@ -2,3 +2,4 @@ vendor
 .phpunit.result.cache
 report/
 .php_cs.cache
+tags
