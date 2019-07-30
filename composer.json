@@ -25,12 +25,13 @@
         "phpstan": "./tools/phpstan analyse --level max examples/ src/",
         "psalm": "./tools/psalm src/ examples/",
         "phpunit": "./tools/phpunit",
-        "infection": "./tools/infection",
+        "infection": "./tools/infection --min-msi=40 --no-interaction --no-ansi --no-progress",
         "test": [
             "@phpcsfix",
             "@phpstan",
             "@psalm",
-            "@phpunit"
+            "@phpunit",
+            "@infection"
         ]
     }
 }
