@@ -3,3 +3,4 @@ vendor
 report/
 .php_cs.cache
 tags
+infection.log

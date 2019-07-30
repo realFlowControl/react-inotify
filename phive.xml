@@ -4,4 +4,5 @@
   <phar name="phpstan" version="^0.11.12" installed="0.11.12" location="./tools/phpstan" copy="true"/>
   <phar name="psalm" version="^3.4.10" installed="3.4.10" location="./tools/psalm" copy="true"/>
   <phar name="php-cs-fixer" version="^2.15.1" installed="2.15.1" location="./tools/php-cs-fixer" copy="true"/>
+  <phar name="infection" version="^0.13.4" installed="0.13.4" location="./tools/infection" copy="true"/>
 </phive>
