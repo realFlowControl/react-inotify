@@ -20,10 +20,10 @@ before_install:
 
 before_script:
     - pecl install inotify
-    - composer install --no-interaction
+    - composer install --no-interaction --no-progress --no-suggest --no-ansi
 
 script:
-    - php vendor/bin/php-cs-fixer fix --config .php_cs.dist --dry-run
+    - composer phpcsfix-test
     - composer phpstan
     - composer psalm
     - composer phpunit 
