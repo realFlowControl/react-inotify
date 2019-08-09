@@ -20,10 +20,9 @@ $ pecl install inotify
 $ composer require flow-control/react-inotify
 ```
 
-### Low level interface
+### How to use
 
-When using the low level interface, you need to setup the intofy resource
-and add watcher as you need for yourself. You may then pass the stream on to
+You need to setup the inotify resource, and pass the valid handle to the
 `\Flowcontrol\React\Inotify\InotifyStream` class and register your event
 handlers.
 
@@ -36,10 +35,6 @@ $watcher->on('event', function (array $data) {
     var_dump($data);
 });
 ```
-
-### High level interface
-
-TBD
 
 ## Tests
 
