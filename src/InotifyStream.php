@@ -34,7 +34,7 @@ final class InotifyStream extends EventEmitter
     {
         if (!\is_resource($stream) ||
             \get_resource_type($stream) !== "stream") {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'First parameter must be a valid stream resource'
             );
         }
@@ -44,7 +44,7 @@ final class InotifyStream extends EventEmitter
         if (isset($meta['mode']) &&
             $meta['mode'] !== '' &&
             \strpos($meta['mode'], 'r') === \strpos($meta['mode'], '+')) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Given stream resource is not opened in read mode'
             );
         }
