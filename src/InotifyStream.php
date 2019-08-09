@@ -64,11 +64,7 @@ final class InotifyStream extends EventEmitter
         // trigger events on (edge triggered).
         // This does not affect the default event loop implementation (level
         // triggered), so we can ignore platforms not supporting this (HHVM).
-        // Pipe streams (such as STDIN) do not seem to require this and legacy
-        // PHP versions cause SEGFAULTs on unbuffered pipe streams, so skip
-        // this.
-        if (\function_exists('stream_set_read_buffer') &&
-            ! $this->isLegacyPipe($stream)) {
+        if (\function_exists('stream_set_read_buffer')) {
             \stream_set_read_buffer($stream, 0);
         }
 
@@ -166,35 +162,5 @@ final class InotifyStream extends EventEmitter
         if (count($events)) {
             $this->emit('event', $events);
         }
-    }
-
-    /**
-     * Returns whether this is a pipe resource in a legacy environment
-     *
-     * This works around a legacy PHP bug (#61019) that was fixed in PHP 5.4.28+
-     * and PHP 5.5.12+ and newer.
-     *
-     * @param resource $resource
-     *
-     * @return bool
-     *
-     * @link https://github.com/reactphp/child-process/issues/40
-     *
-     * @codeCoverageIgnore
-     */
-    private function isLegacyPipe($resource)
-    {
-        if (\PHP_VERSION_ID < 50428 || (
-            \PHP_VERSION_ID >= 50500 &&
-                \PHP_VERSION_ID < 50512
-        )
-        ) {
-            $meta = \stream_get_meta_data($resource);
-            if (isset($meta['stream_type']) &&
-                $meta['stream_type'] === 'STDIO') {
-                return true;
-            }
-        }
-        return false;
     }
 }
