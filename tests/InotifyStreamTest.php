@@ -69,6 +69,27 @@ class InotifyStreamTest extends TestCase
 
     /**
      * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
+     * @covers \Flowcontrol\React\Inotify\InotifyStream::pause
+     * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
+     * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
+     */
+    public function testValidStreamPauseWithEvent(): void
+    {
+        /** @var \React\EventLoop\LoopInterface */
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
+        $loop->expects($this->exactly(2))->method('removeReadStream');
+        $loop->expects($this->exactly(2))->method('addReadStream');
+        $fd = inotify_init();
+        inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
+        $watcher = new InotifyStream($fd, $loop);
+        $watcher->pause();
+        $watcher->resume();
+        $watcher->handleData();
+        $watcher->close();
+    }
+
+    /**
+     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
      * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
      * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
      * @covers \Flowcontrol\React\Inotify\InotifyStream::pause
