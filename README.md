@@ -1,4 +1,6 @@
-# flow-control/react-inotify [![Build Status](https://api.travis-ci.com/flow-control/react-inotify.svg?branch=master)](https://travis-ci.com/flow-control/react-inotify)
+# flow-control/react-inotify
+
+[![Build Status](https://img.shields.io/travis/flow-control/react-inotify.svg?style=for-the-badge&logo=travis)](https://travis-ci.com/flow-control/react-inotify) [![PHP Version](https://img.shields.io/packagist/php-v/flow-control/react-inotify.svg?style=for-the-badge)](https://github.com/flow-control/react-inotify) [![Stable Version](https://img.shields.io/packagist/v/flow-control/react-inotify.svg?style=for-the-badge&label=Latest)](https://packagist.org/packages/flow-control/react-inotify)
 
 Simple, async inotify event handler build with ReactPHP
 
