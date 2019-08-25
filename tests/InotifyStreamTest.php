@@ -72,6 +72,7 @@ class InotifyStreamTest extends TestCase
      * @covers \Flowcontrol\React\Inotify\InotifyStream::pause
      * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
      * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
+     * @covers \Flowcontrol\React\Inotify\InotifyStream::close
      */
     public function testValidStreamPauseWithEvent(): void
     {
