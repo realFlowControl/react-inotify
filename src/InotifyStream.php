@@ -30,6 +30,9 @@ final class InotifyStream extends EventEmitter
      */
     private $listening = false;
 
+    /**
+     * @psalm-suppress MissingParamType
+     */
     public function __construct($stream, LoopInterface $loop)
     {
         if (!\is_resource($stream) ||
@@ -108,6 +111,11 @@ final class InotifyStream extends EventEmitter
         $this->pause();
         $this->removeAllListeners();
 
+        /**
+         * The resource may be closed from outside this class
+         *
+         * @psalm-suppress RedundantConditionGivenDocblockType
+         */
         if (\is_resource($this->stream)) {
             \fclose($this->stream);
         }
