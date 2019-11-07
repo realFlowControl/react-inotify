@@ -61,8 +61,8 @@ class InotifyStreamTest extends TestCase
         inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
         $watcher = new InotifyStream($fd, $loop);
         $watcher->on('event', $this->expectCallableOnce());
-        touch(__DIR__.'/testfile');
-        unlink(__DIR__.'/testfile');
+        touch(__DIR__ . '/testfile');
+        unlink(__DIR__ . '/testfile');
         $watcher->handleData();
         fclose($fd);
     }

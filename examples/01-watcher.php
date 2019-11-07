@@ -22,7 +22,7 @@ $watcher->on('event', static function (array $data): void {
     print_r($data);
 });
 
-touch(__DIR__.'/testfile');
-unlink(__DIR__.'/testfile');
+touch(__DIR__ . '/testfile');
+unlink(__DIR__ . '/testfile');
 
 $loop->run();

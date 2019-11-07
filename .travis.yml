@@ -23,8 +23,8 @@ before_script:
     - composer install --no-interaction --no-progress --no-suggest --no-ansi
 
 script:
-    - composer phpcsfix-test
-    - composer phpstan
-    - composer psalm
-    - composer phpunit 
-    - composer infection
+    - composer test:lint
+    - composer test:phpstan
+    - composer test:psalm
+    - composer test:unit 
+    - composer test:mutation

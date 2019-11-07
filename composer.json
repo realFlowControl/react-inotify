@@ -20,18 +20,18 @@
         }
     },
     "scripts": {
-        "phpcsfix-test": "./tools/php-cs-fixer fix --config .php_cs.dist --dry-run",
-        "phpcsfix": "./tools/php-cs-fixer fix --config .php_cs.dist",
-        "phpstan": "./tools/phpstan analyse --level max examples/ src/",
-        "psalm": "./tools/psalm src/ examples/",
-        "phpunit": "./tools/phpunit",
-        "infection": "./tools/infection --min-msi=40 --no-interaction --no-ansi --no-progress",
+        "fix": "./tools/phpcbf --standard=PSR12 --extensions=php -p src/ tests/ examples/",
+        "test:lint": "./tools/phpcs --standard=PSR12 --extensions=php -p src/ tests/ examples/",
+        "test:phpstan": "./tools/phpstan analyse --level max examples/ src/",
+        "test:psalm": "./tools/psalm src/ examples/",
+        "test:unit": "./tools/phpunit",
+        "test:mutation": "./tools/infection --min-msi=60 --no-interaction --no-ansi --no-progress",
         "test": [
-            "@phpcsfix",
-            "@phpstan",
-            "@psalm",
-            "@phpunit",
-            "@infection"
+            "@test:lint",
+            "@test:phpstan",
+            "@test:psalm",
+            "@test:unit",
+            "@test:mutation"
         ]
     }
 }
