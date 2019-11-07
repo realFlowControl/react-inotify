@@ -3,6 +3,7 @@ language: php
 php:
     - 7.2
     - 7.3
+    - 7.4snapshot
 
 notifications:
     email: false
@@ -13,14 +14,16 @@ cache:
 
 matrix:
     fast_finish: true
+    allow_failures:
+        - php: "7.4snapshot"
 
 before_install:
     - echo 'Europe/Berlin' | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
-
-before_script:
     - pecl install inotify
-    - composer install --no-interaction --no-progress --no-suggest --no-ansi
+
+install:
+    - composer install --no-interaction --no-suggest
 
 script:
     - composer test:lint
