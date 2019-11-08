@@ -14,8 +14,6 @@ cache:
 
 matrix:
     fast_finish: true
-    allow_failures:
-        - php: "7.4snapshot"
 
 before_install:
     - echo 'Europe/Berlin' | sudo tee /etc/timezone
