@@ -1,0 +1,3 @@
+parameters:
+	ignoreErrors:
+		- '#Method Flowcontrol\\React\\Inotify\\InotifyStream::__construct\(\) has parameter \$stream with no typehint specified\.#'

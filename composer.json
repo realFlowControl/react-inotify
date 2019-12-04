@@ -22,7 +22,7 @@
     "scripts": {
         "fix": "./tools/phpcbf --standard=PSR12 --extensions=php -p src/ tests/ examples/",
         "test:lint": "./tools/phpcs --standard=PSR12 --extensions=php -p src/ tests/ examples/",
-        "test:phpstan": "./tools/phpstan analyse --level max examples/ src/",
+        "test:phpstan": "./tools/phpstan analyse -c phpstan.neon --level max examples/ src/",
         "test:psalm": "./tools/psalm src/ examples/",
         "test:unit": "./tools/phpunit",
         "test:mutation": "./tools/infection --min-msi=60 --no-interaction --no-ansi --no-progress",

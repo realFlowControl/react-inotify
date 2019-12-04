@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * start this example using: php 01-example.php
  * open another terminal and: touch foobar
  */
+
+declare(strict_types=1);
 
 use Flowcontrol\React\Inotify\InotifyStream;
 use React\EventLoop\Factory;

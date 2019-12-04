@@ -35,7 +35,8 @@ final class InotifyStream extends EventEmitter
      */
     public function __construct($stream, LoopInterface $loop)
     {
-        if (!\is_resource($stream) ||
+        if (
+            !\is_resource($stream) ||
             \get_resource_type($stream) !== "stream"
         ) {
             throw new \InvalidArgumentException(
@@ -45,7 +46,8 @@ final class InotifyStream extends EventEmitter
 
         // ensure resource is opened for reading (mode must contain "r" or "+")
         $meta = \stream_get_meta_data($stream);
-        if (isset($meta['mode']) &&
+        if (
+            isset($meta['mode']) &&
             $meta['mode'] !== '' &&
             \strpos($meta['mode'], 'r') === \strpos($meta['mode'], '+')
         ) {
@@ -94,7 +96,8 @@ final class InotifyStream extends EventEmitter
 
     public function resume(): void
     {
-        if (!$this->listening &&
+        if (
+            !$this->listening &&
             !$this->closed
         ) {
             $this->loop->addReadStream($this->stream, [$this, 'handleData']);
