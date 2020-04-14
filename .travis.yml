@@ -3,7 +3,7 @@ language: php
 php:
     - 7.2
     - 7.3
-    - 7.4snapshot
+    - 7.4
 
 notifications:
     email: false
@@ -14,8 +14,6 @@ cache:
 
 matrix:
     fast_finish: true
-    allow_failures:
-        - php: "7.4snapshot"
 
 before_install:
     - echo 'Europe/Berlin' | sudo tee /etc/timezone
