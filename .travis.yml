@@ -4,6 +4,7 @@ php:
     - 7.2
     - 7.3
     - 7.4
+    - nightly
 
 notifications:
     email: false
@@ -14,14 +15,36 @@ cache:
 
 matrix:
     fast_finish: true
+    allow_failures:
+        - nightly
+
+env:
+    global:
+        - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-ansi --no-progress --no-suggest"
+        - PLATFORM_FLAGS=""
 
 before_install:
     - echo 'Europe/Berlin' | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
-    - pecl install inotify
+    - |
+      if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then
+          cd /tmp
+          wget https://github.com/arnaud-lb/php-inotify/archive/master.zip
+          unzip master.zip
+          cd php-inotify-master
+          phpize
+          ./configure
+          make
+          make install
+          echo "extension=inotify.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+          cd $TRAVIS_BUILD_DIR
+      else
+          pecl install inotify
+      fi
 
 install:
-    - composer install --no-interaction --no-suggest
+    - if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then export PLATFORM_FLAGS="--ignore-platform-reqs"; fi
+    - composer update $DEFAULT_COMPOSER_FLAGS $PLATFORM_FLAGS
 
 script:
     - composer test:lint
