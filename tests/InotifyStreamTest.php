@@ -126,6 +126,9 @@ class InotifyStreamTest extends TestCase
      */
     public function testCloseStreamWhileHandling(): void
     {
+        if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
+            $this->expectException(\TypeError);
+        }
         /** @var \React\EventLoop\LoopInterface */
         $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $fd = inotify_init();
