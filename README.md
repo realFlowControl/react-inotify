@@ -36,6 +36,9 @@ $watcher = new \Flowcontrol\React\Inotify\InotifyStream($fd, $loop);
 $watcher->on('event', function (array $data) {
     var_dump($data);
 });
+
+inotify_rm_watch($fd, $watch_descriptor);
+fclose($fd);
 ```
 
 ## Tests
