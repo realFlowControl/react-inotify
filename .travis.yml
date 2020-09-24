@@ -13,10 +13,10 @@ cache:
     directories:
         - $HOME/.composer/cache
 
-matrix:
+jobs:
     fast_finish: true
     allow_failures:
-        - nightly
+      - php: nightly
 
 env:
     global:
