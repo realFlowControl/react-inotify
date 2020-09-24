@@ -9,6 +9,9 @@
         "react/event-loop": "^1",
         "evenement/evenement": "^3"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.3"
+    },
     "autoload": {
         "psr-4": {
             "Flowcontrol\\React\\Inotify\\": "src"
@@ -24,7 +27,7 @@
         "test:lint": "./tools/phpcs --standard=PSR12 --extensions=php -p src/ tests/ examples/",
         "test:phpstan": "./tools/phpstan analyse --level max examples/ src/",
         "test:psalm": "./tools/psalm src/ examples/",
-        "test:unit": "./tools/phpunit",
+        "test:unit": "./vendor/bin/phpunit",
         "test:mutation": "./tools/infection --min-msi=60 --no-interaction --no-ansi --no-progress",
         "test": [
             "@test:lint",
