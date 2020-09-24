@@ -11,7 +11,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.3",
-        "phpstan/phpstan": "^0.12.44"
+        "phpstan/phpstan": "^0.12.44",
+        "infection/infection": "^0.13.0|^0.14.0|^0.15.0|^0.16.0|^0.17.0"
     },
     "autoload": {
         "psr-4": {
@@ -29,7 +30,7 @@
         "test:phpstan": "./vendor/bin/phpstan analyse --level max examples/ src/",
         "test:psalm": "./tools/psalm src/ examples/",
         "test:unit": "./vendor/bin/phpunit",
-        "test:mutation": "./tools/infection --min-msi=60 --no-interaction --no-ansi --no-progress",
+        "test:mutation": "./vendor/bin/infection --min-msi=60 --no-interaction --no-ansi --no-progress",
         "test": [
             "@test:lint",
             "@test:phpstan",
