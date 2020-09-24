@@ -29,10 +29,10 @@
     "scripts": {
         "fix": "php-cs-fixer fix",
         "test:lint": "php-cs-fixer fix --dry-run",
-        "test:phpstan": "./vendor/bin/phpstan analyse --level max examples/ src/",
-        "test:psalm": "./vendor/bin/psalm src/ examples/",
-        "test:unit": "./vendor/bin/phpunit",
-        "test:mutation": "./vendor/bin/infection --min-msi=60 --no-interaction --no-ansi --no-progress",
+        "test:phpstan": "phpstan analyse --level max examples/ src/",
+        "test:psalm": "psalm src/ examples/",
+        "test:unit": "phpunit",
+        "test:mutation": "infection --min-msi=60 --no-interaction --no-ansi --no-progress",
         "test": [
             "@test:lint",
             "@test:phpstan",
