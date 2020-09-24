@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Flowcontrol\React\Inotify\Tests;
 
-use const TypeError;
 use Flowcontrol\React\Inotify\InotifyStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -130,9 +129,6 @@ class InotifyStreamTest extends TestCase
      */
     public function testCloseStreamWhileHandling(): void
     {
-        if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
-            $this->expectException(TypeError);
-        }
         /** @var \React\EventLoop\LoopInterface */
         $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $fd   = inotify_init();

@@ -9,6 +9,7 @@ use Evenement\EventEmitter;
 use InvalidArgumentException;
 use React\EventLoop\LoopInterface;
 use RuntimeException;
+use TypeError;
 use function function_exists;
 use function get_resource_type;
 use function inotify_queue_len;
@@ -161,8 +162,12 @@ final class InotifyStream extends EventEmitter
         // fetch all events, as long as there are events in the queue
         $events = [];
 
-        while (inotify_queue_len($this->stream)) {
-            $events[] = inotify_read($this->stream);
+        try {
+            while (inotify_queue_len($this->stream)) {
+                $events[] = inotify_read($this->stream);
+            }
+        } catch (TypeError $e) {
+            $error = $e;
         }
 
         restore_error_handler();
