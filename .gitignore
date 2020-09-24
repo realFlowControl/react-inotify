@@ -4,3 +4,4 @@ report/
 .php_cs.cache
 tags
 infection.log
+composer.lock

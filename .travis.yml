@@ -3,7 +3,8 @@ language: php
 php:
     - 7.2
     - 7.3
-    - 7.4snapshot
+    - 7.4
+    - nightly
 
 notifications:
     email: false
@@ -12,17 +13,38 @@ cache:
     directories:
         - $HOME/.composer/cache
 
-matrix:
+jobs:
     fast_finish: true
+    allow_failures:
+      - php: nightly
+
+env:
+    global:
+        - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-ansi --no-progress --no-suggest"
+        - PLATFORM_FLAGS=""
 
 before_install:
     - echo 'Europe/Berlin' | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
-    - pecl install inotify
-    - if ! php -m | grep -q "Xdebug"; then pecl install xdebug; echo 'zend_extension="xdebug.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
+    - |
+      if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then
+          cd /tmp
+          wget https://github.com/arnaud-lb/php-inotify/archive/master.zip
+          unzip master.zip
+          cd php-inotify-master
+          phpize
+          ./configure
+          make
+          make install
+          echo "extension=inotify.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+          cd $TRAVIS_BUILD_DIR
+      else
+          pecl install inotify
+      fi
 
 install:
-    - composer install --no-interaction --no-suggest
+    - if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then export PLATFORM_FLAGS="--ignore-platform-reqs"; fi
+    - composer update $DEFAULT_COMPOSER_FLAGS $PLATFORM_FLAGS
 
 script:
     - composer test:lint
