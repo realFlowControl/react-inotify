@@ -10,7 +10,8 @@
         "evenement/evenement": "^3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.3"
+        "phpunit/phpunit": "^8.5|^9.3",
+        "phpstan/phpstan": "^0.12.44"
     },
     "autoload": {
         "psr-4": {
@@ -25,7 +26,7 @@
     "scripts": {
         "fix": "./tools/phpcbf --standard=PSR12 --extensions=php -p src/ tests/ examples/",
         "test:lint": "./tools/phpcs --standard=PSR12 --extensions=php -p src/ tests/ examples/",
-        "test:phpstan": "./tools/phpstan analyse --level max examples/ src/",
+        "test:phpstan": "./vendor/bin/phpstan analyse --level max examples/ src/",
         "test:psalm": "./tools/psalm src/ examples/",
         "test:unit": "./vendor/bin/phpunit",
         "test:mutation": "./tools/infection --min-msi=60 --no-interaction --no-ansi --no-progress",
