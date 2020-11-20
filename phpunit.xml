@@ -17,5 +17,6 @@
     <logging>
         <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
         <log type="coverage-html" target="report/" showUncoveredFiles="false"/>
+        <log type="coverage-clover" target="report/clover.xml" showUncoveredFiles="false"/>
     </logging>
 </phpunit>
