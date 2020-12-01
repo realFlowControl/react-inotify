@@ -53,3 +53,6 @@ script:
     - composer test:psalm
     - composer test:unit 
     - if [[ ${TRAVIS_PHP_VERSION} != "8.0snapshot" ]]; then composer test:mutation; fi
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
