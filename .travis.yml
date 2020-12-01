@@ -1,10 +1,6 @@
-language: php
+dist: bionic
 
-php:
-    - 7.2
-    - 7.3
-    - 7.4
-    - 8.0snapshot
+language: php
 
 notifications:
     email: false
@@ -15,6 +11,14 @@ cache:
 
 jobs:
     fast_finish: true
+    include:
+        - php: 7.2
+        - php: 7.3
+        - php: 7.4
+          dist: focal
+        - php: 8.0snapshot
+          dist: focal
+          env: PLATFORM_FLAGS="--ignore-platform-reqs"
 
 env:
     global:
@@ -41,7 +45,6 @@ before_install:
       fi
 
 install:
-    - if [[ ${TRAVIS_PHP_VERSION} == "8.0snapshot" ]]; then export PLATFORM_FLAGS="--ignore-platform-reqs"; fi
     - composer update $DEFAULT_COMPOSER_FLAGS $PLATFORM_FLAGS
 
 script:
