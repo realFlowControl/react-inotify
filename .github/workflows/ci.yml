@@ -54,3 +54,6 @@ jobs:
 
       - name: Mutation Tests
         run: composer test:mutation
+
+      - name: Export coverage to codecov
+        uses: codecov/codecov-action@v1
