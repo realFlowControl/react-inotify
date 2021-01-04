@@ -26,19 +26,6 @@ jobs:
           tools: pecl
           extensions: inotify
 
-      - name: Install inotify on PHP 8
-        if: matrix.php-versions == '8.0'
-        run: |
-          wget https://github.com/arnaud-lb/php-inotify/archive/master.zip
-          unzip master.zip
-          cd php-inotify-master
-          phpize
-          ./configure
-          make
-          make install
-          echo "extension=inotify.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-          cd ..
-
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
