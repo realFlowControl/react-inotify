@@ -9,11 +9,11 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
+/**
+ * @covers \Flowcontrol\React\Inotify\InotifyStream
+ */
 class InotifyStreamTest extends TestCase
 {
-    /**
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
-     */
     public function testInitNoStream(): void
     {
         /** @var \React\EventLoop\LoopInterface */
@@ -22,9 +22,6 @@ class InotifyStreamTest extends TestCase
         new InotifyStream(null, $loop);
     }
 
-    /**
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
-     */
     public function testInitStreamNotInReadMode(): void
     {
         /** @var \React\EventLoop\LoopInterface */
@@ -34,11 +31,6 @@ class InotifyStreamTest extends TestCase
         new InotifyStream($fd, $loop);
     }
 
-    /**
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
-     */
     public function testValidStreamWithoutEvent(): void
     {
         /** @var \React\EventLoop\LoopInterface */
@@ -47,15 +39,12 @@ class InotifyStreamTest extends TestCase
         inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
         $watcher = new InotifyStream($fd, $loop);
         $watcher->on('event', $this->expectCallableNever());
+        $watcher->on('close', $this->expectCallableOnce());
         $watcher->handleData();
+        $watcher->close();
         fclose($fd);
     }
 
-    /**
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
-     */
     public function testValidStreamWithEvent(): void
     {
         /** @var \React\EventLoop\LoopInterface */
@@ -70,36 +59,45 @@ class InotifyStreamTest extends TestCase
         fclose($fd);
     }
 
-    /**
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::pause
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::close
-     */
+    public function testNoResumeAfterClose(): void
+    {
+        /** @var \React\EventLoop\LoopInterface */
+        $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
+        $fd   = inotify_init();
+        inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
+        $watcher = new InotifyStream($fd, $loop);
+        $watcher->on('event', $this->expectCallableOnce());
+        touch(__DIR__ . '/testfile');
+        unlink(__DIR__ . '/testfile');
+        $watcher->handleData();
+        $watcher->close();
+        fclose($fd);
+        $watcher->resume();
+        $this->assertFalse($watcher->isReadable());
+    }
+
     public function testValidStreamPauseWithEvent(): void
     {
         /** @var \React\EventLoop\LoopInterface */
         $loop = $this->getMockBuilder(\React\EventLoop\LoopInterface::class)->getMock();
         $loop->expects($this->exactly(2))->method('removeReadStream');
         $loop->expects($this->exactly(2))->method('addReadStream');
-        $fd = inotify_init();
+        $fd   = inotify_init();
         inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
         $watcher = new InotifyStream($fd, $loop);
+        $watcher->on('event', $this->expectCallableTimes(2));
+        touch(__DIR__ . '/testfile');
+        unlink(__DIR__ . '/testfile');
+        $watcher->handleData();
         $watcher->pause();
         $watcher->resume();
+        touch(__DIR__ . '/testfile');
+        unlink(__DIR__ . '/testfile');
         $watcher->handleData();
         $watcher->close();
+        fclose($fd);
     }
 
-    /**
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::pause
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::close
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::isReadable
-     */
     public function testValidStreamWithoutEventAndClose(): void
     {
         /** @var \React\EventLoop\LoopInterface */
@@ -116,17 +114,10 @@ class InotifyStreamTest extends TestCase
         $this->assertFalse($watcher->isReadable());
         // test close call on closed stream
         $watcher->close();
+        fclose($fd);
         $this->assertFalse($watcher->isReadable());
     }
 
-    /**
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::__construct
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::resume
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::handleData
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::pause
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::close
-     * @covers \Flowcontrol\React\Inotify\InotifyStream::isReadable
-     */
     public function testCloseStreamWhileHandling(): void
     {
         /** @var \React\EventLoop\LoopInterface */
@@ -154,6 +145,14 @@ class InotifyStreamTest extends TestCase
     {
         $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
         $mock->expects($this->once())->method('__invoke');
+
+        return $mock;
+    }
+
+    private function expectCallableTimes(int $times)
+    {
+        $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
+        $mock->expects($this->exactly($times))->method('__invoke');
 
         return $mock;
     }
