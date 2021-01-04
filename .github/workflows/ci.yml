@@ -54,7 +54,6 @@ jobs:
         run: composer test:unit
 
       - name: Mutation Tests
-        if: matrix.php-versions != '8.0'
         run: composer test:mutation
 
       - name: Export coverage to codecov
