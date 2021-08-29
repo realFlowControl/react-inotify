@@ -4,17 +4,17 @@
     "keywords": ["event-driven", "inotify", "non-blocking", "ReactPHP"],
     "license": "MIT",
     "require": {
-        "php": "^7.2|^8",
+        "php": "^8",
         "ext-inotify": "*",
-        "react/event-loop": "^1",
+        "react/event-loop": "^1.2",
         "evenement/evenement": "^3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.4",
-        "phpstan/phpstan": "^0.12.58",
-        "infection/infection": "^0.15.0|^0.16.0|^0.17.0|^0.18.0|^0.19.0|^0.20.0",
-        "vimeo/psalm": "^4.2.1",
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^0.12.96",
+        "infection/infection": "^0.24.0",
+        "vimeo/psalm": "^4.9.3",
+        "friendsofphp/php-cs-fixer": "^2"
     },
     "autoload": {
         "psr-4": {

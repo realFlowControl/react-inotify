@@ -10,10 +10,14 @@ use InvalidArgumentException;
 use React\EventLoop\LoopInterface;
 use RuntimeException;
 use TypeError;
+use function fclose;
 use function function_exists;
 use function get_resource_type;
+use function inotify_add_watch;
+use function inotify_init;
 use function inotify_queue_len;
 use function inotify_read;
+use function inotify_rm_watch;
 use function is_resource;
 use function restore_error_handler;
 use function set_error_handler;
@@ -27,7 +31,7 @@ final class InotifyStream extends EventEmitter
     /**
      * @var resource
      */
-    private $stream;
+    private $inotify;
 
     /**
      * @var LoopInterface
@@ -35,25 +39,21 @@ final class InotifyStream extends EventEmitter
     private $loop;
 
     /**
-     * @var bool
+     * @var string[]
      */
-    private $closed = false;
+    private $watchers = [];
 
     /**
-     * @var bool
-     */
-    private $listening = false;
-
-    /**
-     * @param resource $stream
      * @psalm-suppress RedundantConditionGivenDocblockType
      * @psalm-suppress DocblockTypeContradiction
      */
-    public function __construct($stream, LoopInterface $loop)
+    public function __construct(?LoopInterface $loop = null)
     {
+        $inotify = inotify_init();
+
         if (
-            !is_resource($stream) ||
-            get_resource_type($stream) !== 'stream'
+            !is_resource($inotify) ||
+            get_resource_type($inotify) !== 'stream'
         ) {
             throw new InvalidArgumentException(
                 'First parameter must be a valid stream resource'
@@ -61,7 +61,7 @@ final class InotifyStream extends EventEmitter
         }
 
         // ensure resource is opened for reading (mode must contain "r" or "+")
-        $meta = stream_get_meta_data($stream);
+        $meta = stream_get_meta_data($inotify);
 
         if (
             isset($meta['mode']) &&
@@ -76,7 +76,7 @@ final class InotifyStream extends EventEmitter
         // this class relies on non-blocking I/O in order to not interrupt
         // the event loop e.g. pipes on Windows do not support this:
         // https://bugs.php.net/bug.php?id=47918
-        if (stream_set_blocking($stream, false) !== true) {
+        if (stream_set_blocking($inotify, false) !== true) {
             throw new RuntimeException(
                 'Unable to set stream resource to non-blocking mode'
             );
@@ -89,50 +89,34 @@ final class InotifyStream extends EventEmitter
         // This does not affect the default event loop implementation (level
         // triggered), so we can ignore platforms not supporting this (HHVM).
         if (function_exists('stream_set_read_buffer')) {
-            stream_set_read_buffer($stream, 0);
+            stream_set_read_buffer($inotify, 0);
         }
 
-        $this->stream = $stream;
-        $this->loop   = $loop;
+        $this->inotify = $inotify;
+        $this->loop    = $loop ?? \React\EventLoop\Loop::get();
 
-        $this->resume();
+        $this->loop->addReadStream($this->inotify, [$this, 'handleData']);
     }
 
-    public function isReadable(): bool
+    public function __destruct()
     {
-        return !$this->closed;
-    }
-
-    public function pause(): void
-    {
-        if ($this->listening) {
-            $this->loop->removeReadStream($this->stream);
-            $this->listening = false;
-        }
-    }
-
-    public function resume(): void
-    {
-        if (
-            !$this->listening &&
-            !$this->closed
-        ) {
-            $this->loop->addReadStream($this->stream, [$this, 'handleData']);
-            $this->listening = true;
-        }
-    }
-
-    public function close(): void
-    {
-        if ($this->closed) {
-            return;
-        }
-
-        $this->closed = true;
-
+        $this->loop->removeReadStream($this->inotify);
+        fclose($this->inotify);
         $this->emit('close');
-        $this->pause();
         $this->removeAllListeners();
+    }
+
+    public function addWatch(string $path, int $mode): int
+    {
+        $wd                  = inotify_add_watch($this->inotify, $path, $mode);
+        $this->watchers[$wd] = $path;
+
+        return $wd;
+    }
+
+    public function rmWatch(int $wd): bool
+    {
+        return inotify_rm_watch($this->inotify, $wd);
     }
 
     /**
@@ -163,8 +147,8 @@ final class InotifyStream extends EventEmitter
         $events = [];
 
         try {
-            while (inotify_queue_len($this->stream)) {
-                $events[] = inotify_read($this->stream);
+            while (inotify_queue_len($this->inotify)) {
+                $events[] = inotify_read($this->inotify);
             }
         } catch (TypeError $e) {
             $error = $e;
@@ -183,7 +167,6 @@ final class InotifyStream extends EventEmitter
                     ),
                 ]
             );
-            $this->close();
 
             return;
         }
