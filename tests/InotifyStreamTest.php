@@ -28,6 +28,7 @@ class InotifyStreamTest extends TestCase
         $watcher = new InotifyStream();
         $watcher->addWatch(__DIR__, IN_CLOSE_WRITE);
         $watcher->on('event', $this->expectCallableNever());
+        $watcher->on('close', $this->expectCallableOnce());
         $watcher->handleData();
     }
 
@@ -53,6 +54,14 @@ class InotifyStreamTest extends TestCase
     {
         $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
         $mock->expects($this->once())->method('__invoke');
+
+        return $mock;
+    }
+
+    private function expectCallableTimes(int $times)
+    {
+        $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
+        $mock->expects($this->exactly($times))->method('__invoke');
 
         return $mock;
     }

@@ -14,7 +14,7 @@
         "phpstan/phpstan": "^0.12.96",
         "infection/infection": "^0.24.0",
         "vimeo/psalm": "^4.9.3",
-        "friendsofphp/php-cs-fixer": "^2"
+        "friendsofphp/php-cs-fixer": "^2.18"
     },
     "autoload": {
         "psr-4": {
