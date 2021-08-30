@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+
+### Added
+- `Flowcontrol\React\Inotify\InotifyStream::addWatch()` method to add a new watcher
+- `Flowcontrol\React\Inotify\InotifyStream::rmWatch()` remove a prior registered watcher
+
+### Changed
+- ctor does not need inotify stream or event loop anymore
+
+### Removed
+- `Flowcontrol\React\Inotify\InotifyStream::isReadable`
+- `Flowcontrol\React\Inotify\InotifyStream::pause`
+- `Flowcontrol\React\Inotify\InotifyStream::resume`
+- `Flowcontrol\React\Inotify\InotifyStream::close`
+
 ## [1.1.1] - 2021-01-04
 
 ### Changed
