@@ -8,11 +8,11 @@
 declare(strict_types=1);
 
 use Flowcontrol\React\Inotify\InotifyStream;
-use React\EventLoop\Factory;
+use React\EventLoop\Loop;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$loop = Factory::create();
+$loop = Loop::get();
 
 $watcher = new InotifyStream();
 $watcher->addWatch(__DIR__, IN_CLOSE_WRITE);

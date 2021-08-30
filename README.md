@@ -27,21 +27,15 @@ $ composer require flow-control/react-inotify
 
 ### How to use
 
-You need to setup the inotify resource, and pass the valid handle to the
-`\Flowcontrol\React\Inotify\InotifyStream` class and register your event
-handlers.
+Create an object from the `\Flowcontrol\React\Inotify\InotifyStream` class
+and register your event handlers.
 
 ```php
-$fd = inotify_init();
-$watch_descriptor = inotify_add_watch($fd, __DIR__, IN_CLOSE_WRITE);
-
-$watcher = new \Flowcontrol\React\Inotify\InotifyStream($fd, $loop);
-$watcher->on('event', function (array $data) {
+$inotify = new \Flowcontrol\React\Inotify\InotifyStream();
+$inotify->on('event', function (array $data) {
     var_dump($data);
 });
-
-inotify_rm_watch($fd, $watch_descriptor);
-fclose($fd);
+$inotfiy->addWatch(__DIR__, IN_CLOSE_WRITE);
 ```
 
 ## Tests
