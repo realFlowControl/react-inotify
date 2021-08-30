@@ -42,6 +42,19 @@ class InotifyStreamTest extends TestCase
         $watcher->handleData();
     }
 
+    public function testRemoveWatch(): void
+    {
+        $watcher = new InotifyStream();
+        $wd      = $watcher->addWatch(__DIR__, IN_CLOSE_WRITE);
+        $watcher->rmWatch($wd);
+        $watcher->on('event', $this->expectCallableOnce());
+        // it might seem odd, that there we expectCallableOnce, but you need
+        // to know that calling `inotify_rm_watch()` emit a IN_IGNORED event
+        touch(__DIR__ . '/testfileRmWatch');
+        unlink(__DIR__ . '/testfileRmWatch');
+        $watcher->handleData();
+    }
+
     private function expectCallableNever()
     {
         $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();

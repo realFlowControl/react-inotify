@@ -37,7 +37,7 @@
         ],
         "test:mutation": [
             "@putenv XDEBUG_MODE=coverage",
-            "infection --min-msi=60 --no-interaction --no-ansi --no-progress"
+            "infection --min-msi=30 --no-interaction --no-ansi --no-progress"
         ],
         "test": [
             "@test:lint",

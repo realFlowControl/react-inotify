@@ -21,10 +21,8 @@ use function inotify_rm_watch;
 use function is_resource;
 use function restore_error_handler;
 use function set_error_handler;
-use function stream_get_meta_data;
 use function stream_set_blocking;
 use function stream_set_read_buffer;
-use function strpos;
 
 final class InotifyStream extends EventEmitter
 {
@@ -56,20 +54,7 @@ final class InotifyStream extends EventEmitter
             get_resource_type($inotify) !== 'stream'
         ) {
             throw new InvalidArgumentException(
-                'First parameter must be a valid stream resource'
-            );
-        }
-
-        // ensure resource is opened for reading (mode must contain "r" or "+")
-        $meta = stream_get_meta_data($inotify);
-
-        if (
-            isset($meta['mode']) &&
-            $meta['mode'] !== '' &&
-            strpos($meta['mode'], 'r') === strpos($meta['mode'], '+')
-        ) {
-            throw new InvalidArgumentException(
-                'Given stream resource is not opened in read mode'
+                'Call to `inotify_init()` did not succeed'
             );
         }
 
@@ -116,6 +101,8 @@ final class InotifyStream extends EventEmitter
 
     public function rmWatch(int $wd): bool
     {
+        unset($this->watchers[$wd]);
+
         return inotify_rm_watch($this->inotify, $wd);
     }
 
