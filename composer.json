@@ -4,7 +4,7 @@
     "keywords": ["event-driven", "inotify", "non-blocking", "ReactPHP"],
     "license": "MIT",
     "require": {
-        "php": "^7.2|^8.0.0",
+        "php": "^7.2 || ~8.0, <8.1",
         "ext-inotify": "*",
         "react/event-loop": "^1.2",
         "evenement/evenement": "^3"
