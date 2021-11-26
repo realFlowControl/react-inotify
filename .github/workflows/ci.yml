@@ -5,10 +5,55 @@ on:
 name: CI
 
 jobs:
-  build:
+  Analysis:
     strategy:
       matrix:
-        php-versions: ['7.2', '7.3', '7.4', '8.0']
+        php-versions: ['8.0']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          ini-values: post_max_size=256M, log_errors=1
+          coverage: none
+          tools: pecl
+          extensions: inotify
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Coding Guidelines
+        if: matrix.php-versions != '8.0'
+        run: composer test:lint
+
+      - name: Static Analyzer (PHPStan)
+        run: composer test:phpstan
+
+      - name: Static Analyzer (Psalm)
+        run: composer test:psalm
+
+  Tests:
+    strategy:
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4', '8.0', '8.1']
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,20 +85,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Coding Guidelines
-        run: composer test:lint
-
-      - name: Static Analyzer (PHPStan)
-        run: composer test:phpstan
-
-      - name: Static Analyzer (Psalm)
-        run: composer test:psalm
-
       - name: Unit Tests
         run: composer test:unit
 
       - name: Mutation Tests
-        run: XDEBUG_MODE=coverage composer test:mutation
+        run: composer test:mutation
 
       - name: Export coverage to codecov
         uses: codecov/codecov-action@v1
