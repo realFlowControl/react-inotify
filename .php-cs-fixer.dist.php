@@ -7,8 +7,8 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/src')
     ->in(__DIR__ . '/tests/');
 
-return PhpCsFixer\Config::create()
-    ->setFinder($finder)
+$config = new PhpCsFixer\Config();
+return $config->setFinder($finder)
     ->setRiskyAllowed(true)
     ->setRules([
         '@PSR2' => true,
@@ -52,7 +52,6 @@ return PhpCsFixer\Config::create()
                 'continue',
                 'declare',
                 'default',
-                'die',
                 'do',
                 'exit',
                 'for',
@@ -68,14 +67,15 @@ return PhpCsFixer\Config::create()
                 'try',
                 'while',
                 'yield',
+                'yield_from',
             ],
         ],
         'cast_spaces' => true,
         'class_attributes_separation' => [
             'elements' => [
-                'const',
-                'method',
-                'property'
+                'const' => 'one',
+                'method' => 'one',
+                'property' => 'one',
             ]
         ],
         'combine_consecutive_issets' => true,
@@ -96,7 +96,9 @@ return PhpCsFixer\Config::create()
         ],
         'logical_operators' => true,
         'lowercase_cast' => true,
-        'lowercase_constants' => true,
+        'constant_case' => [
+            'case' => 'lower'
+        ],
         'lowercase_keywords' => true,
         'lowercase_static_reference' => true,
         'magic_constant_casing' => true,
@@ -119,7 +121,9 @@ return PhpCsFixer\Config::create()
         'no_null_property_initialization' => true,
         'no_php4_constructor' => true,
         'no_short_bool_cast' => true,
-        'no_short_echo_tag' => true,
+        'echo_tag_syntax' => [
+            'format' => 'long'
+        ],
         'no_singleline_whitespace_before_semicolons' => true,
         'no_superfluous_elseif' => true,
         'no_superfluous_phpdoc_tags' => [
@@ -212,7 +216,11 @@ return PhpCsFixer\Config::create()
         'single_quote' => true,
         'standardize_not_equals' => true,
         'ternary_to_null_coalescing' => true,
-        'trailing_comma_in_multiline_array' => true,
+        'trailing_comma_in_multiline' => [
+            'elements' => [
+                'arrays'
+            ],
+        ],
         'trim_array_spaces' => true,
         'unary_operator_spaces' => true,
         'void_return' => true,
