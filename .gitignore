@@ -1,6 +1,7 @@
 vendor
 .phpunit.result.cache
 report/
+.php-cs-fixer.cache
 .php_cs.cache
 tags
 infection.log
