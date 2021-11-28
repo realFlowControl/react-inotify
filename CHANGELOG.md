@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `Flowcontrol\React\Inotify\InotifyStream::addWatch()` method to add a new watcher
 - `Flowcontrol\React\Inotify\InotifyStream::rmWatch()` remove a prior registered watcher
+- Support for PHP 8.1
 
 ### Changed
 - ctor does not need inotify stream or event loop anymore
