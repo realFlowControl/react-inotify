@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Flowcontrol\React\Inotify\InotifyStream::pause`
 - `Flowcontrol\React\Inotify\InotifyStream::resume`
 - `Flowcontrol\React\Inotify\InotifyStream::close`
+- Support for PHP < 8.0.0
 
 ## [1.1.1] - 2021-01-04
 
