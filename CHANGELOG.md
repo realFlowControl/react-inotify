@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 ### Added
-- `Flowcontrol\React\Inotify\InotifyStream::addWatch()` method to add a new watcher
-- `Flowcontrol\React\Inotify\InotifyStream::rmWatch()` remove a prior registered watcher
+- `Flowcontrol\React\Inotify\InotifyStream::addWatch` method to add a new watcher
+- `Flowcontrol\React\Inotify\InotifyStream::rmWatch` remove a prior registered watcher
 - Support for PHP 8.1
 
 ### Changed
-- ctor does not need inotify stream or event loop anymore
+- `Flowcontrol\Reacht\Inotify\InotifyStream::__construct` does not need inotify stream or event loop anymore
 
 ### Removed
 - `Flowcontrol\React\Inotify\InotifyStream::isReadable`
@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHP 8 support
 
 ### Changed 
-- Updated developement dependencies
+- Updated development dependencies
 - Will not close file pointer anymore in library
 
 ## [1.0.2] - 2019-11-07
@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2019-08-25
 ### Added
 - psalm annotations for suppressing not problematic/incorrect notices
-- missing phpunit cover annotation
+- missing PHPUnit cover annotation
 - this changelog :-)
 
 ## [1.0.0] - 2019-09-08
@@ -56,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - basic inotify stream handler
 - example code
 - unit tests
-- static code analysis using pslam and phpstan
+- static code analysis using Pslam and PHPStan
 
 [1.1.1]: https://github.com/flow-control/react-inotify/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/flow-control/react-inotify/compare/v1.0.2...v1.1.0
