@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Flowcontrol\React\Inotify;
 
-use ErrorException;
 use Evenement\EventEmitter;
 use InvalidArgumentException;
 use React\EventLoop\LoopInterface;
@@ -19,8 +18,6 @@ use function inotify_queue_len;
 use function inotify_read;
 use function inotify_rm_watch;
 use function is_resource;
-use function restore_error_handler;
-use function set_error_handler;
 use function stream_set_blocking;
 use function stream_set_read_buffer;
 
@@ -86,7 +83,10 @@ final class InotifyStream extends EventEmitter
     public function __destruct()
     {
         $this->loop->removeReadStream($this->inotify);
-        fclose($this->inotify);
+
+        if (is_resource($this->inotify)) {
+            fclose($this->inotify);
+        }
         $this->emit('close');
         $this->removeAllListeners();
     }
@@ -111,25 +111,6 @@ final class InotifyStream extends EventEmitter
      */
     public function handleData(): void
     {
-        /** @var null|ErrorException */
-        $error = null;
-        set_error_handler(static function (
-            int $errno,
-            string $errstr,
-            string $errfile,
-            int $errline
-        ) use (&$error): bool {
-            $error = new ErrorException(
-                $errstr,
-                0,
-                $errno,
-                $errfile,
-                $errline
-            );
-
-            return true;
-        });
-
         // fetch all events, as long as there are events in the queue
         $events = [];
 
@@ -137,13 +118,7 @@ final class InotifyStream extends EventEmitter
             while (inotify_queue_len($this->inotify)) {
                 $events[] = inotify_read($this->inotify);
             }
-        } catch (TypeError $e) {
-            $error = $e;
-        }
-
-        restore_error_handler();
-
-        if ($error !== null) {
+        } catch (TypeError $error) {
             $this->emit(
                 'error',
                 [

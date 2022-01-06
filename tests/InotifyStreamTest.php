@@ -7,7 +7,10 @@ namespace Flowcontrol\React\Inotify\Tests;
 use const IN_CLOSE_WRITE;
 use Flowcontrol\React\Inotify\InotifyStream;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
+use RuntimeException;
 use stdClass;
+use TypeError;
 
 /**
  * @covers \Flowcontrol\React\Inotify\InotifyStream
@@ -55,26 +58,79 @@ class InotifyStreamTest extends TestCase
         $watcher->handleData();
     }
 
+    public function testErrorEmitOnInotifyProblem(): void
+    {
+        $watcher = new InotifyStream();
+        $watcher->addWatch(__DIR__, IN_CLOSE_WRITE);
+        $watcher->on('event', $this->expectCallableNever());
+        /** @var RuntimeException */
+        $e = null;
+        $watcher->on('error', function ($data) use (&$e): void {
+            $e = $data;
+        });
+
+        $prop = new ReflectionProperty("\Flowcontrol\React\Inotify\InotifyStream", 'inotify');
+        $prop->setAccessible(true);
+        /** @var resource */
+        $inotify = $prop->getValue($watcher);
+        fclose($inotify);
+
+        touch(__DIR__ . '/testfile');
+        unlink(__DIR__ . '/testfile');
+        $watcher->handleData();
+
+        $this->assertInstanceOf(
+            RuntimeException::class,
+            $e
+        );
+
+        $this->assertSame(
+            0,
+            $e->getCode()
+        );
+
+        $this->assertSame(
+            'Unable to read from stream: inotify_queue_len(): supplied resource is not a valid stream resource',
+            $e->getMessage()
+        );
+
+        $prev = $e->getPrevious();
+
+        $this->assertInstanceOf(
+            TypeError::class,
+            $prev
+        );
+    }
+
     private function expectCallableNever()
     {
-        $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
-        $mock->expects($this->never())->method('__invoke');
+        $mock = $this->getMockBuilder(stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+        $mock->expects($this->never())
+             ->method('__invoke');
 
         return $mock;
     }
 
     private function expectCallableOnce()
     {
-        $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
-        $mock->expects($this->once())->method('__invoke');
+        $mock = $this->getMockBuilder(stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+        $mock->expects($this->once())
+             ->method('__invoke');
 
         return $mock;
     }
 
     private function expectCallableTimes(int $times)
     {
-        $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
-        $mock->expects($this->exactly($times))->method('__invoke');
+        $mock = $this->getMockBuilder(stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+        $mock->expects($this->exactly($times))
+            ->method('__invoke');
 
         return $mock;
     }
