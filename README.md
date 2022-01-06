@@ -17,6 +17,10 @@ This library depends on the [PHP Inotify extension](https://pecl.php.net/package
 $ pecl install inotify
 ```
 
+## PHP Version Support
+
+If you are looking for PHP 7 support you need to install `flow-control/react-inotify` in version 1. Version 2 dropped support for PHP 7.
+
 ## Usage
 
 ### Install
