@@ -45,5 +45,11 @@
             "@test:unit",
             "@test:mutation"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "infection/extension-installer": true
+        }
     }
 }
