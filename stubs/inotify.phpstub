@@ -1,0 +1,12 @@
+<?php
+
+namespace {
+    /**
+     * @param resource $inotify_instance
+     * @param string $pathname
+     * @param int $mask
+     *
+     * @return int<1, max>|false
+     */
+    function inotify_add_watch(resource $inotify_instance, string $pathname, int $mask): int|false {}
+}

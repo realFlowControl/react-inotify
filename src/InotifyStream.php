@@ -92,7 +92,7 @@ final class InotifyStream extends EventEmitter
     }
 
     /**
-     * @return int<1, max>|false
+     * @return false|int<1, max>
      */
     public function addWatch(string $path, int $mode): int|false
     {
