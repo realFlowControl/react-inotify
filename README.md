@@ -1,6 +1,6 @@
 # flow-control/react-inotify
 
-[![Build Status](https://img.shields.io/github/workflow/status/flow-control/react-inotify/CI/master?style=for-the-badge&logo=github%20actions)](https://github.com/flow-control/react-inotify/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/flow-control/react-inotify/ci.yml?style=for-the-badge&logo=github%20actions&branch=master)](https://github.com/flow-control/react-inotify/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/flow-control/react-inotify?style=for-the-badge&logo=codecov)](https://codecov.io/gh/flow-control/react-inotify)
 [![PHP Version](https://img.shields.io/packagist/php-v/flow-control/react-inotify.svg?style=for-the-badge)](https://github.com/flow-control/react-inotify)
 [![Stable Version](https://img.shields.io/packagist/v/flow-control/react-inotify.svg?style=for-the-badge&label=Latest)](https://packagist.org/packages/flow-control/react-inotify)
