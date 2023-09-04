@@ -91,7 +91,10 @@ final class InotifyStream extends EventEmitter
         $this->removeAllListeners();
     }
 
-    public function addWatch(string $path, int $mode): int
+    /**
+     * @return int<1, max>|false
+     */
+    public function addWatch(string $path, int $mode): int|false
     {
         $wd                  = inotify_add_watch($this->inotify, $path, $mode);
         $this->watchers[$wd] = $path;
