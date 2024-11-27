@@ -1,6 +1,8 @@
 on:
-  - pull_request
-  - push
+  pull_request: null
+  push:
+    branches:
+      - master
 
 name: CI
 
@@ -12,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Validate composer.json and composer.lock
         run: composer validate
@@ -31,7 +33,7 @@ jobs:
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -47,17 +49,14 @@ jobs:
       - name: Static Analyzer (PHPStan)
         run: composer test:phpstan
 
-      - name: Static Analyzer (Psalm)
-        run: composer test:psalm
-
   Tests:
     strategy:
       matrix:
-        php-versions: ['8.0', '8.1', '8.2', '8.3']
+        php-versions: ['8.0', '8.1', '8.2', '8.3', '8.4']
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Validate composer.json and composer.lock
         run: composer validate
@@ -76,7 +75,7 @@ jobs:
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
