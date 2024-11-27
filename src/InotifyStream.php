@@ -38,10 +38,6 @@ final class InotifyStream extends EventEmitter
      */
     private $watchers = [];
 
-    /**
-     * @psalm-suppress RedundantConditionGivenDocblockType
-     * @psalm-suppress DocblockTypeContradiction
-     */
     public function __construct(?LoopInterface $loop = null)
     {
         $inotify = inotify_init();

@@ -47,9 +47,6 @@ jobs:
       - name: Static Analyzer (PHPStan)
         run: composer test:phpstan
 
-      - name: Static Analyzer (Psalm)
-        run: composer test:psalm
-
   Tests:
     strategy:
       matrix:
